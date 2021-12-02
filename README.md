@@ -5,3 +5,4 @@ Buts :
 - Savoir échanger des données entre composants
 - Prendre en main Vue JS
 - Editer des routes
+- Intégrer Bootstrap
