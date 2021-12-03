@@ -1,8 +1,24 @@
 # shop-components-vue
-Un site de vente avec des composants Vue parents et enfants
 
-Buts : 
-- Savoir échanger des données entre composants
-- Prendre en main Vue JS
-- Editer des routes
-- Intégrer Bootstrap
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
