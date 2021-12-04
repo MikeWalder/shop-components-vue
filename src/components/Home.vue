@@ -1,27 +1,31 @@
 <template>
   <div class="home">
-    <h1 class="pt-md-3">Accueil</h1>
+    <h1 class="pt-md-3 pb-md-3">Accueil</h1>
   
     <div class="container-fluid">
       <div class="row">
-        <div class="col-3">
-          <div class="input-group border border-secondary">
-            <input type="text" class="form-control" placeholder="Rechercher..." autocomplete="off">
-              <span v-if="searchKey && filtrationList.length >= 1">
-              {{filtrationList.length}} résultat
-              <span v-if="filtrationList > 1">s</span>
-              </span>
-            <div v-if="filtrationList.length == []" class="no-result">
-              <h3>Aucun résultat trouvé</h3>
-            </div>
+        <div class="col-8 col-xs-8 col-md-6 pb-3">
+          <div class="input-group col-10 col-md-6">
+            <transition
+            mode="out-in"
+            enter-active-class="animate__animated animate__fadeInUp"
+            leave-active-class="animate__animated animate__fadeOutDown">
+            <input v-model="searchKey" type="search" class="form-control border border-success" placeholder="Rechercher..." autocomplete="off">
+            </transition>
+              <span class="h4 pt-2 pl-3" v-if="searchKey && filtrationList.length >= 1">{{filtrationList.length}} résultat(s)&ensp;&ensp;&nbsp;</span>
+              <span class="h4 pt-2 pl-3" v-else>Aucun résultat</span>
           </div>
+            <!-- <div class="no-result col-6 col-xs-6 col-md-8" v-if="searchKey === ''">
+              <h5 class="pt-2 pl-2">Aucun résultat trouvé</h5>
+            </div> -->
         </div>
       </div>
     </div>
 
-    <div class="container pt-3">
+    <div class="container-fluid pt-3">
       <div class="row">
-        <div class="col-3 card-group pt-2 pb-2" v-for="item in filtrationList" :key="item.id">
+
+        <div class="col-6 col-xs-4 col-md-3 col-lg-2 card-group pt-2 pb-2" v-for="item in filtrationList" :key="item.id">
           <div class="card">
 
             <div class="card-top">
@@ -29,9 +33,11 @@
             </div>
 
             <div class="card-body">
-              <h4 class="card-title">{{item.description}}</h4>
-              <p class="card-text mb-0">{{item.price}}€</p>
-
+              <div class="card-descriptor">
+                <h5 class="card-title pt-2">{{item.description}}</h5>
+                <div class="btn btn-info">{{item.price}}€</div>
+              </div>
+              
               <div class="card-container">
                 <div class="like-container">
                   <input
@@ -43,13 +49,13 @@
                     @click="setLikeCookie()"
                   >
                   <label :for="item.id">
-                    <i class="fas fa-heart"></i>
+                    <i class="fas fa-heart fa-lg" @click="displayLiked"></i>
                   </label>
                 </div>
 
                 <div class="add-to-cart">
-                  <button @click="addToCart(item)">
-                    <i class="fas fa-shopping-cart"></i>
+                  <button>
+                    <i class="fas fa-shopping-cart fa-lg"></i>
                   </button>
                 </div>
               </div>
@@ -57,6 +63,7 @@
 
           </div>
         </div>
+
       </div>
     </div>
     
@@ -101,7 +108,7 @@ export default {
       });
     },
     getLikeCookie() {
-      let cookieValue = 3;
+      let cookieValue = 36; //JSON.parse(this.$cookies.get('like'));
       cookieValue == null ? this.liked == [] : this.liked == cookieValue;
       return cookieValue;
     }, 
@@ -120,7 +127,6 @@ export default {
       return totalAmount;
     }
   },
-  
   methods: {
     setLikeCookie() {
       document.addEventListener("input", () => {
@@ -156,8 +162,14 @@ export default {
     deleteProduct(id) {
       this.$delete(this.cart, id);
     },
+    displayLiked() {
+      console.log(this.liked)
+    }
   },
-
+  
+  created() {
+    //this.$cookies.set("like", 1, 60*60)
+  },
   mounted() {
     this.getLikeCookie;
   }  
@@ -202,5 +214,32 @@ export default {
 
 .card-body {
   padding: 0px;
+}
+
+.like-container > input[type="checkbox"]:checked ~ label {
+  color: rgba(251, 38, 38, 0.5);
+  transition: color 0.4s;
+}
+
+.like-container > input[type="checkbox"] ~ label {
+  color: black;
+  transition: color 0.4s;
+}
+
+.card-descriptor {
+  opacity: 0;
+  height: 50px;
+  display: flex;
+  position: relative;
+  bottom: -50px;
+  align-items: center;
+  justify-content: space-around;
+  background: linear-gradient(to bottom, #fff 0%, #bbb 50%, #fff 100%);
+}
+
+.card:hover .card-descriptor {
+  opacity: 0.8;
+  transform: translate(0px, -50px);
+  transition: all 0.8s ease-in-out;
 }
 </style>
