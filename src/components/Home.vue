@@ -1,6 +1,15 @@
 <template>
   <div class="home">
-    <h1 class="pt-md-3 pb-md-3">Accueil</h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+          <div class="h1 pt-md-3 pb-md-3">Accueil</div>
+        </div>
+        <div class="col-4">
+        </div>
+      </div>
+    </div>
   
     <div class="container-fluid">
       <div class="row">
@@ -15,9 +24,48 @@
               <span class="h4 pt-2 pl-3" v-if="searchKey && filtrationList.length >= 1">{{filtrationList.length}} résultat(s)&ensp;&ensp;&nbsp;</span>
               <span class="h4 pt-2 pl-3" v-else>Aucun résultat</span>
           </div>
-            <!-- <div class="no-result col-6 col-xs-6 col-md-8" v-if="searchKey === ''">
-              <h5 class="pt-2 pl-2">Aucun résultat trouvé</h5>
-            </div> -->
+            
+        </div>
+        <div class="col-2"></div>
+        <div class="col-4 col-xs-4 col-md-3 pb-2 ml-5 shopping-cart animate__fadeIn" :class="cart.length > 0 ? 'bg-info' : ''">
+          <div :class="cart.length > 0 ? 'd-inline' : 'd-none'" class="col-2 animate__fadeIn" style="height: 500px">
+            <div class="h1 text-white">
+              <u class="pb-3">Panier</u>
+            </div>
+            <div v-for="item, id in cart" :key="item.id" class="ml-auto text-left">
+              <div class="container-fluid p-0">
+                <div class="row">
+                  <div class="col-3 rounded rounded-circle animate__animated animate__fadeIn">
+                    <img :src="item.img" class="rounded-circle pt-3" style="width: 3vw">
+                  </div>
+                  <div class="col-6 p-0 bounceIn">
+                    <div class="h5 ml-auto align-middle font-weight-bold pt-3 animate__bounceIn">{{item.description}}</div>
+                    <span class="font-italic">quantité : {{item.quantity}}</span>
+                    <i class="fas fa-plus ml-3 bg-light rounded-circle text-info p-1 animate__bounceIn" @click="addOneProduct(item)"></i>
+                    <i class="fas fa-minus ml-3 bg-light rounded-circle text-info p-1 animate__bounceIn" @click="removeOneProduct(item, id)"></i>
+                    <i class="fas fa-trash ml-3 bg-light rounded-circle text-info p-1 animate__bounceIn" @click="deleteProduct(id)"></i>
+                  </div>
+                  <div class="col-2">
+                    <div class="h4 font-weight-bold align-middle pt-3 animate__animated animate__fadeIn">
+                      {{item.price}}€
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+            <div class="btn btn-warning">
+              <router-link :to="{ path: '/shopping',name: 'ShoppingCart', params: { id: cart.id, quantity: cart.quantity }}">
+                <a v-bind:cartDatas="cart" @click="getCookieShop" class="text-left text-dark h4 pl-5" title="Accéder au panier">
+                  Total : &ensp;&ensp;
+                  <span class="h3 font-weight-bold pr-5">{{totalAmountCart}}€</span>
+                </a>
+              </router-link>
+              <router-view/>
+            </div>
+            
+            
+          </div>
         </div>
       </div>
     </div>
@@ -25,44 +73,43 @@
     <div class="container-fluid pt-3">
       <div class="row">
 
-        <div class="col-6 col-xs-4 col-md-3 col-lg-2 card-group pt-2 pb-2" v-for="item in filtrationList" :key="item.id">
-          <div class="card">
+          <div class="card-group pt-2 pb-2" v-for="item in filtrationList" :key="item.id">
+            <div class="card">
 
-            <div class="card-top">
-              <img class="card-img-top img-thumbnail" :src="item.img" :alt="item.description">
-            </div>
-
-            <div class="card-body">
-              <div class="card-descriptor">
-                <h5 class="card-title pt-2">{{item.description}}</h5>
-                <div class="btn btn-info">{{item.price}}€</div>
+              <div class="card-top">
+                <img class="card-img-top img-thumbnail" :src="item.img" :alt="item.description">
               </div>
-              
-              <div class="card-container">
-                <div class="like-container">
-                  <input
-                    type="checkbox"
-                    name="checkbox"
-                    :id="item.id"
-                    :value="item.id"
-                    v-model="liked"
-                    @click="setLikeCookie()"
-                  >
-                  <label :for="item.id">
-                    <i class="fas fa-heart fa-lg" @click="displayLiked"></i>
-                  </label>
-                </div>
 
-                <div class="add-to-cart">
-                  <button>
-                    <i class="fas fa-shopping-cart fa-lg"></i>
-                  </button>
+              <div class="card-body">
+                <div class="card-descriptor">
+                  <h5 class="card-title pt-2">{{item.description}}</h5>
+                  <div class="btn btn-info">{{item.price}}€</div>
+                </div>
+                
+                <div class="card-container">
+                  <div class="like-container">
+                    <input
+                      type="checkbox"
+                      name="checkbox"
+                      :id="item.id"
+                      :value="item.id"
+                      v-model="liked"
+                      @click="setLikeCookie()"
+                    >
+                    <label :for="item.id">
+                      <i class="fas fa-heart fa-lg" @click="displayLiked"></i>
+                    </label>
+                  </div>
+
+                  <div class="add-to-cart">
+                    <button @click="addToCart(item)">
+                      <i class="fas fa-shopping-cart fa-lg"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
-        </div>
 
       </div>
     </div>
@@ -99,6 +146,8 @@ export default {
     }
   },
 
+  props: ['cartDatas'],
+
   computed: {
     filtrationList() {
       return this.products.filter((product) => {
@@ -108,8 +157,9 @@ export default {
       });
     },
     getLikeCookie() {
-      let cookieValue = 36; //JSON.parse(this.$cookies.get('like'));
+      let cookieValue  = JSON.parse(document.cookie);
       cookieValue == null ? this.liked == [] : this.liked == cookieValue;
+      console.log(cookieValue);
       return cookieValue;
     }, 
     totalAmountCart() {
@@ -127,11 +177,12 @@ export default {
       return totalAmount;
     }
   },
+
   methods: {
     setLikeCookie() {
       document.addEventListener("input", () => {
         setTimeout(() => {
-          this.$cookies.set("like", JSON.stringify(this.liked));
+          document.cookie = ("like", JSON.stringify(this.liked));
         }, 300);
       });
     },
@@ -148,6 +199,7 @@ export default {
         price: prod.price,
         quantity: 1,
       });
+      //console.log(this.cart);
     },
     addOneProduct(item) {
       item.quantity = item.quantity + 1;
@@ -160,16 +212,23 @@ export default {
       }
     },
     deleteProduct(id) {
-      this.$delete(this.cart, id);
+      console.log(typeof(this.cart))
+      console.log(this.cart[id])
+      this.cart.splice(id, 1)
     },
     displayLiked() {
       console.log(this.liked)
+    },
+    getCookieShop() {
+      document.addEventListener("click", () => {
+        setTimeout(() => {
+          document.cookie = ("getShop", JSON.stringify(this.liked));
+        }, 300);
+      });
+      console.log(document.cookie("getShop"))
     }
   },
-  
-  created() {
-    //this.$cookies.set("like", 1, 60*60)
-  },
+
   mounted() {
     this.getLikeCookie;
   }  
@@ -241,5 +300,10 @@ export default {
   opacity: 0.8;
   transform: translate(0px, -50px);
   transition: all 0.8s ease-in-out;
+}
+
+.shopping-cart {
+  max-height: 500px;
+  overflow: auto;
 }
 </style>

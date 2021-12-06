@@ -9,7 +9,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home, 
+    props: true
   },
   {
     path: '/usersettings',
@@ -32,7 +33,8 @@ const routes = [
   {
     path: '/shopping',
     name: 'ShoppingCart',
-    component: ShoppingCart
+    component: ShoppingCart,
+    props: true
   }
 ]
 
