@@ -73,7 +73,7 @@
     <div class="container-fluid pt-3">
       <div class="row">
 
-          <div class="card-group pt-2 pb-2" v-for="item in filtrationList" :key="item.id">
+          <div class="card-group col-2 pt-2 pb-2" v-for="item in filtrationList" :key="item.id">
             <div class="card">
 
               <div class="card-top">
@@ -126,29 +126,20 @@ export default {
 
   data() {
     return {
-      products: [
-      { id: 1, description: "Quarz Luxe", price: 12, img: 'img/quarz-luxe.jpg'},
-      { id: 2, description: 'Curren Business', price: 20, img: 'img/curren-business.JPG'},
-      { id: 3, description: 'Curren Sport', price: 5, img: 'img/curren-sport.JPG'},
-      { id: 4, description: 'Jaragar Racing', price: 8, img: 'img/jaragar-racing.JPG'},
-      { id: 5, description: 'Liges Hommes', price: 3, img: 'img/liges-hommes.JPG'},
-      { id: 6, description: 'Maserati Mechanical', price: 65, img: 'img/maserati-mechanical.JPG'},
-      { id: 7, description: 'Montre Mecanique', price: 25, img: 'img/montre-mecanique.JPG'},
-      { id: 8, description: 'Brand Designer', price: 28, img: 'img/brand-designer.JPG'},
-      { id: 9, description: 'Relogio Masculino', price: 4, img: 'img/relogio-masculino.JPG'},
-      { id: 10, description: 'Tissot Multifunction', price: 29, img: 'img/tissot-multifunction.JPG'},
-      { id: 11, description: 'Hip Hop Gold', price: 87, img: 'img/hiphop-gold.JPG'},
-      { id: 12, description: 'Mesh Genova', price: 6, img: 'img/mesh-genova.JPG'},
-    ],
       searchKey: "",
-      liked: [],
-      cart: []
+      liked: []
     }
   },
 
   props: ['cartDatas'],
 
   computed: {
+    products() {
+      return this.$store.getters.getProducts;
+    },
+    cart() {
+      return this.$store.getters.getCart;
+    },
     filtrationList() {
       return this.products.filter((product) => {
         return product.description
@@ -157,7 +148,7 @@ export default {
       });
     },
     getLikeCookie() {
-      let cookieValue  = JSON.parse(document.cookie);
+      let cookieValue = null;
       cookieValue == null ? this.liked == [] : this.liked == cookieValue;
       console.log(cookieValue);
       return cookieValue;
@@ -199,7 +190,7 @@ export default {
         price: prod.price,
         quantity: 1,
       });
-      //console.log(this.cart);
+      console.log(this.cart);
     },
     addOneProduct(item) {
       item.quantity = item.quantity + 1;
@@ -219,14 +210,14 @@ export default {
     displayLiked() {
       console.log(this.liked)
     },
-    getCookieShop() {
+    /* getCookieShop() {
       document.addEventListener("click", () => {
         setTimeout(() => {
           document.cookie = ("getShop", JSON.stringify(this.liked));
         }, 300);
       });
       console.log(document.cookie("getShop"))
-    }
+    } */
   },
 
   mounted() {
