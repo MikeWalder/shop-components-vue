@@ -90,14 +90,15 @@
                   <div class="like-container">
                     <input
                       type="checkbox"
-                      name="checkbox"
-                      :id="item.id"
-                      :value="item.id"
-                      v-model="liked"
-                      @click="setLikeCookie()"
+                      name="checkboxing"
+                      :id="item.id" 
+                      :value="item.id" 
+                      v-model="liked" 
+                      @click="addToLiked(item)"
                     >
                     <label :for="item.id">
-                      <i class="fas fa-heart fa-lg" @click="displayLiked"></i>
+                      <!-- <i class="fas fa-heart fa-lg fa-checked" @click="displayLiked"></i> -->
+                      <div class="btn btn-success">add</div>
                     </label>
                   </div>
 
@@ -126,8 +127,7 @@ export default {
 
   data() {
     return {
-      searchKey: "",
-      liked: []
+      searchKey: ""
     }
   },
 
@@ -139,6 +139,9 @@ export default {
     },
     cart() {
       return this.$store.getters.getCart;
+    },
+    liked() {
+      return this.$store.getters.getLiked;
     },
     filtrationList() {
       return this.products.filter((product) => {
@@ -170,12 +173,20 @@ export default {
   },
 
   methods: {
-    setLikeCookie() {
-      document.addEventListener("input", () => {
-        setTimeout(() => {
-          document.cookie = ("like", JSON.stringify(this.liked));
-        }, 300);
+    addToLiked(prod) {
+      for (let i = 0; i < this.liked.length; i++) {
+        if (this.liked[i].id === prod.id) {
+          return this.liked[i].quantity++;
+        }
+      }
+      this.liked.push({
+        id: prod.id,
+        img: prod.img,
+        description: prod.description,
+        price: prod.price,
+        quantity: 1,
       });
+      console.log(this.liked);
     },
     addToCart(prod) {
       for (let i = 0; i < this.cart.length; i++) {
@@ -209,7 +220,7 @@ export default {
     },
     displayLiked() {
       console.log(this.liked)
-    },
+    }
     /* getCookieShop() {
       document.addEventListener("click", () => {
         setTimeout(() => {
@@ -245,6 +256,10 @@ export default {
   color: rgba(251, 38, 38, 0.5);
 }
 
+.like-container label:checked .fa-heart {
+  color: red;
+}
+
 .add-to-cart .fa-shopping-cart {
   color: #2eb7eb;
 }
@@ -266,12 +281,15 @@ export default {
   padding: 0px;
 }
 
-.like-container > input[type="checkbox"]:checked ~ label {
-  color: rgba(251, 38, 38, 0.5);
-  transition: color 0.4s;
+.like-container input:checked ~ label .btn {
+  color: red;
 }
 
-.like-container > input[type="checkbox"] ~ label {
+.like-container > input[type="checkbox"]:checked ~ label:checked .fa-heart {
+  background: blue;
+}
+
+.like-container > input + label {
   color: black;
   transition: color 0.4s;
 }

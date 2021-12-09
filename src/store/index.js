@@ -16,7 +16,8 @@ export default createStore({
       { id: 11, description: 'Hip Hop Gold', price: 87, img: 'img/hiphop-gold.JPG'},
       { id: 12, description: 'Mesh Genova', price: 6, img: 'img/mesh-genova.JPG'},
     ], 
-    cart: []
+    cart: [],
+    liked: []
   },
   getters: {
     getProducts(state) {
@@ -24,6 +25,9 @@ export default createStore({
     },
     getCart(state) {
       return state.cart
+    },
+    getLiked(state) {
+      return state.liked
     }
   },
   mutations: {

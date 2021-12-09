@@ -62,9 +62,6 @@ export default {
   props: ['id', 'quantity'],
   computed: {
     produits() {
-      //direct access
-      //return this.$store.state.produits;
-
       //Getters
       return this.$store.getters.getProduits;
     },
