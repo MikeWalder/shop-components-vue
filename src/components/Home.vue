@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+
     <div class="container-fluid">
       <div class="row">
         <div class="col-4"></div>
@@ -54,17 +55,18 @@
                 <hr>
               </div>
             </div>
+
+            <!--  -->
             <div class="btn btn-warning">
-              <router-link :to="{ path: '/shopping',name: 'ShoppingCart', params: { id: cart.id, quantity: cart.quantity }}">
-                <a v-bind:cartDatas="cart" @click="getCookieShop" class="text-left text-dark h4 pl-5" title="Accéder au panier">
+              <router-link :to="{ path: '/shopping',name: 'ShoppingCart'}">
+                <a v-bind:cartDatas="cart" class="text-left text-dark h4 pl-5" title="Accéder au panier">
                   Total : &ensp;&ensp;
                   <span class="h3 font-weight-bold pr-5">{{totalAmountCart}}€</span>
                 </a>
               </router-link>
               <router-view/>
             </div>
-            
-            
+
           </div>
         </div>
       </div>
@@ -81,34 +83,32 @@
               </div>
 
               <div class="card-body">
+
                 <div class="card-descriptor">
                   <h5 class="card-title pt-2">{{item.description}}</h5>
                   <div class="btn btn-info">{{item.price}}€</div>
                 </div>
                 
                 <div class="card-container">
-                  <div class="like-container">
-                    <input
-                      type="checkbox"
-                      name="checkboxing"
-                      :id="item.id" 
-                      :value="item.id" 
-                      v-model="liked" 
-                      @click="addToLiked(item)"
-                    >
-                    <label :for="item.id">
-                      <!-- <i class="fas fa-heart fa-lg fa-checked" @click="displayLiked"></i> -->
-                      <div class="btn btn-success">add</div>
+                  <div class="form-check">
+                    
+                    
+                    <label class="form-check-label pr-3 custom-checkbox" :for="`liked${item.id}`" @click="addToLiked(item)" >
+                      <input v-model="liked" class="form-check-input" type="checkbox" name="checkboxing" :value="item.id" :id="`liked${item.id}`" >
+                      <i class="fab fa-gratipay fa-2x unchecked liking"></i>
                     </label>
+                    
                   </div>
 
                   <div class="add-to-cart">
                     <button @click="addToCart(item)">
-                      <i class="fas fa-shopping-cart fa-lg"></i>
+                      <i class="fas fa-shopping-cart fa-2x"></i>
                     </button>
                   </div>
                 </div>
+
               </div>
+
             </div>
           </div>
 
@@ -176,15 +176,25 @@ export default {
     addToLiked(prod) {
       for (let i = 0; i < this.liked.length; i++) {
         if (this.liked[i].id === prod.id) {
-          return this.liked[i].quantity++;
-        }
+          let likedItem = document.querySelector(`#liked${this.liked[i].id}`).checked;
+          let likedIcon = document.querySelector(`#liked${this.liked[i].id} ~ .liking`);
+          
+          if(likedIcon.classList.contains('unchecked')) {
+            likedIcon.className = "fas fa-heart fa-2x checked liking";
+            console.log(likedItem)
+          }
+          else if (likedIcon.classList.contains('checked')) {
+            likedIcon.className = "fab fa-gratipay fa-2x unchecked liking";
+            console.log(likedItem)
+          }
+          return this.liked[i]
+        } 
       }
       this.liked.push({
         id: prod.id,
         img: prod.img,
         description: prod.description,
-        price: prod.price,
-        quantity: 1,
+        price: prod.price
       });
       console.log(this.liked);
     },
@@ -200,6 +210,7 @@ export default {
         description: prod.description,
         price: prod.price,
         quantity: 1,
+        liked: true
       });
       console.log(this.cart);
     },
@@ -248,16 +259,26 @@ export default {
   transition: all 0.4s ease-in-out;
 }
 
-.like-container input {
-  display: none;
+.custom-checkbox input[type=checkbox] {
+  transform: scale(2.6);
 }
 
-.like-container .fa-heart:hover {
-  color: rgba(251, 38, 38, 0.5);
+.custom-checkbox input[type="checkbox"], .custom-checkbox .form-check-input {
+  position: relative;
+  left: 1.5em;
+  opacity: 0.01
 }
 
-.like-container label:checked .fa-heart {
-  color: red;
+.custom-checkbox input[type="checkbox"]:checked ~ .checked {
+  display: inline-block;
+}
+
+.custom-checkbox input[type="checkbox"]:checked ~ .unchecked {
+  display: inline-block;
+} 
+
+.fa-heart {
+    color: red;
 }
 
 .add-to-cart .fa-shopping-cart {
@@ -269,6 +290,14 @@ export default {
   background: none;
   outline: none;
   cursor: pointer;
+}
+
+.add-to-cart button:hover .fa-shopping-cart {
+  color: green;
+}
+
+.add-to-cart button:visited .fa-shopping-cart {
+  color: red;
 }
 
 .card-container {
