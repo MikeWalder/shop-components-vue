@@ -7,15 +7,15 @@
         <div class="col-4">
           <div class="h1 pt-md-3 pb-md-3">Accueil</div>
         </div>
-        <div class="col-4">
-        </div>
+        <div class="col-4"></div>
       </div>
     </div>
   
     <div class="container-fluid">
       <div class="row">
-        <div class="col-8 col-xs-8 col-md-6 pb-3">
-          <div class="input-group col-10 col-md-6">
+
+        <div class="col-12 pb-3">
+          <div class="input-group col-12 col-md-4">
             <transition
             mode="out-in"
             enter-active-class="animate__animated animate__fadeInUp"
@@ -25,9 +25,10 @@
               <span class="h4 pt-2 pl-3" v-if="searchKey && filtrationList.length >= 1">{{filtrationList.length}} résultat(s)&ensp;&ensp;&nbsp;</span>
               <span class="h4 pt-2 pl-3" v-else>Aucun résultat</span>
           </div>
-            
         </div>
+
         <div class="col-2"></div>
+
         <div class="col-4 col-xs-4 col-md-3 pb-2 ml-5 shopping-cart animate__fadeIn" :class="cart.length > 0 ? 'bg-info' : ''">
           <div :class="cart.length > 0 ? 'd-inline' : 'd-none'" class="col-2 animate__fadeIn" style="height: 500px">
             <div class="h1 text-white">
@@ -75,7 +76,7 @@
     <div class="container-fluid pt-3">
       <div class="row">
 
-          <div class="card-group col-2 pt-2 pb-2" v-for="item in filtrationList" :key="item.id">
+          <div class="card-group col-12 col-xs-6 col-md-3 col-lg-2 pt-2 pb-2" v-for="item in filtrationList" :key="item.id">
             <div class="card">
 
               <div class="card-top">
@@ -92,10 +93,10 @@
                 <div class="card-container">
                   <div class="form-check">
                     
-                    
                     <label class="form-check-label pr-3 custom-checkbox" :for="`liked${item.id}`" @click="addToLiked(item)" >
                       <input v-model="liked" class="form-check-input" type="checkbox" name="checkboxing" :value="item.id" :id="`liked${item.id}`" >
-                      <i class="fab fa-gratipay fa-2x unchecked liking"></i>
+                      <i v-if="item.likedItem == true" class="fas fa-heart fa-2x checked liking"></i>
+                      <i v-if="item.likedItem == false" class="fab fa-gratipay fa-2x unchecked liking"></i>
                     </label>
                     
                   </div>
@@ -176,16 +177,17 @@ export default {
     addToLiked(prod) {
       for (let i = 0; i < this.liked.length; i++) {
         if (this.liked[i].id === prod.id) {
-          let likedItem = document.querySelector(`#liked${this.liked[i].id}`).checked;
           let likedIcon = document.querySelector(`#liked${this.liked[i].id} ~ .liking`);
           
           if(likedIcon.classList.contains('unchecked')) {
             likedIcon.className = "fas fa-heart fa-2x checked liking";
-            console.log(likedItem)
+            this.liked[i].likedItem = true
+            prod.likedItem = true
           }
           else if (likedIcon.classList.contains('checked')) {
             likedIcon.className = "fab fa-gratipay fa-2x unchecked liking";
-            console.log(likedItem)
+            this.liked[i].likedItem = false
+            prod.likeItem = false
           }
           return this.liked[i]
         } 
@@ -194,7 +196,8 @@ export default {
         id: prod.id,
         img: prod.img,
         description: prod.description,
-        price: prod.price
+        price: prod.price,
+        likedItem: prod.likedItem
       });
       console.log(this.liked);
     },
@@ -232,14 +235,6 @@ export default {
     displayLiked() {
       console.log(this.liked)
     }
-    /* getCookieShop() {
-      document.addEventListener("click", () => {
-        setTimeout(() => {
-          document.cookie = ("getShop", JSON.stringify(this.liked));
-        }, 300);
-      });
-      console.log(document.cookie("getShop"))
-    } */
   },
 
   mounted() {
@@ -323,25 +318,45 @@ export default {
   transition: color 0.4s;
 }
 
-.card-descriptor {
-  opacity: 0;
-  height: 50px;
-  display: flex;
-  position: relative;
-  bottom: -50px;
-  align-items: center;
-  justify-content: space-around;
-  background: linear-gradient(to bottom, #fff 0%, #bbb 50%, #fff 100%);
-}
-
-.card:hover .card-descriptor {
-  opacity: 0.8;
-  transform: translate(0px, -50px);
-  transition: all 0.8s ease-in-out;
-}
-
 .shopping-cart {
   max-height: 500px;
   overflow: auto;
+}
+
+@media (max-width: 767px) {
+  .card:hover .card-descriptor {
+    opacity: 0.8;
+    
+    transition: all 0.8s ease-in-out;
+  }
+
+  .card-descriptor {
+    opacity: 1;
+    height: 50px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: linear-gradient(to bottom, #fff 0%, #bbb 50%, #fff 100%);
+  }
+}
+
+@media (min-width: 768px) {
+  .card-descriptor {
+    opacity: 0;
+    height: 50px;
+    position: relative;
+    bottom: -50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: linear-gradient(to bottom, #fff 0%, #bbb 50%, #fff 100%);
+  }
+
+  .card:hover .card-descriptor {
+    opacity: 0.8;
+    transform: translate(0px, -50px);
+    transition: all 0.8s ease-in-out;
+  }
 }
 </style>

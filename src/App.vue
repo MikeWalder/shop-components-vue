@@ -1,7 +1,7 @@
 <template>
   <div id="nav">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border border-bottom border-secondary">
+    <nav class="navbar navbar-expand navbar-light bg-light border border-bottom border-secondary">
       
       <div class="navbar-brand">
         <router-link to="/">
@@ -12,26 +12,26 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mx-auto">
 
-          <li class="nav-item pl-5 pr-5">
-            <div class="navbar-brand">
-              <router-link to="/usersettings">
-                <i class="fas fa-user-cog fa-lg"></i>
-              </router-link>
-            </div>
-          </li>
-
-          <li class="nav-item pl-5 pr-5">
+          <li class="nav-item pl-2 pl-md-5 pr-2 pr-md-5">
             <div class="navbar-brand">
               <router-link to="/wishlist">
-                <i class="fas fa-heart fa-lg"></i>
+                <i class="fas fa-heart fa-lg" title="Vos favoris"></i>
               </router-link>
             </div>
           </li>
 
-          <li class="nav-item pl-5">
+          <li class="nav-item pr-2 pr-md-5 pl-2 pl-md-5">
             <div class="navbar-brand">
               <router-link to="/contact">
-                <i class="fas fa-mail-bulk fa-lg"></i>
+                <i class="fas fa-mail-bulk fa-lg" title="Contact"></i>
+              </router-link>
+            </div>
+          </li>
+
+          <li class="nav-item pl-2 pl-md-5">
+            <div class="navbar-brand">
+              <router-link to="/usersettings">
+                <i class="fas fa-user-cog fa-lg" title="Paramètres utilisateur"></i>
               </router-link>
             </div>
           </li>
@@ -41,10 +41,10 @@
 
       <div class="navbar-brand">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item pr-5">
+          <li class="nav-item pr-md-5">
             <div class="navbar-brand">
               <router-link to="/shopping">
-                <i class="fas fa-shopping-cart fa-lg"></i>
+                <i class="fas fa-shopping-cart fa-lg" title="Panier"></i>
               </router-link>
             </div>
           </li>

@@ -2,8 +2,17 @@
   <div class="shopping">
     <h1 class="pt-md-3">Panier</h1>
 
+    <div v-if="cart.length == 0" class="container">
+      <div class="row">
+        <div class="col-12 h3 text-center bg-light">
+          Aucun produit dans votre panier
+        </div>
+      </div>
+    </div>
+
     <div v-if="cart.length > 0" class="container">
       <table class="table table-striped table-dark">
+
         <thead>
           <tr>
             <th scope="col">Image</th>
